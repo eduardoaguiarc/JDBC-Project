@@ -30,10 +30,16 @@ public class Program2 {
 
         System.out.println("=== Test 4: Department update ===");
         Department dep2 = departmentDao.findById(1);
-		dep2.setName("Food");
-		departmentDao.update(dep2);
-		System.out.println("Update completed");
+        dep2.setName("Food");
+        departmentDao.update(dep2);
+        System.out.println("Update completed");
 
+        System.out.println("=== Test 5: Department delete ===");
+        System.out.println("Enter id for delete test: ");
+        int id = sc.nextInt();
+        departmentDao.deleteById(id);
+        System.out.println("Delete completed");
+        
         sc.close();
     }
 }

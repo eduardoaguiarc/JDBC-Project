@@ -26,17 +26,17 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         ResultSet rs = null;
 
         try {
-           st = conn.prepareStatement("SELECT * FROM department WHERE Id = ?");
-           st.setInt(1, id);
-           rs = st.executeQuery();
+            st = conn.prepareStatement("SELECT * FROM department WHERE Id = ?");
+            st.setInt(1, id);
+            rs = st.executeQuery();
 
-           if (rs.next()) {
+            if (rs.next()) {
                 Department dep = new Department();
                 dep.setId(rs.getInt("id"));
                 dep.setName(rs.getString("name"));
                 return dep;
-           }
-           return null;
+            }
+            return null;
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         } finally {
@@ -51,17 +51,17 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         ResultSet rs = null;
 
         try {
-          st = conn.prepareStatement("SELECT * FROM department ORDER BY name");
-          rs = st.executeQuery();
-          
-          List<Department> list = new ArrayList<>();
-          while (rs.next()) {
-            Department dep = new Department();
-            dep.setId(rs.getInt("id"));
-            dep.setName(rs.getString("name"));
-            list.add(dep);
-          }
-          return list;
+            st = conn.prepareStatement("SELECT * FROM department ORDER BY name");
+            rs = st.executeQuery();
+
+            List<Department> list = new ArrayList<>();
+            while (rs.next()) {
+                Department dep = new Department();
+                dep.setId(rs.getInt("id"));
+                dep.setName(rs.getString("name"));
+                list.add(dep);
+            }
+            return list;
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         } finally {
@@ -77,9 +77,9 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         try {
             st = conn.prepareStatement(
                     "INSERT INTO department "
-                    + "(Name) "
-                    + "VALUES "
-                    + "(?)",
+                            + "(Name) "
+                            + "VALUES "
+                            + "(?)",
                     PreparedStatement.RETURN_GENERATED_KEYS);
 
             st.setString(1, obj.getName());
@@ -120,8 +120,17 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
     @Override
     public void deleteById(Integer id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteById'");
+        PreparedStatement st = null;
+
+        try {
+            st = conn.prepareStatement("DELETE FROM department WHERE id = ?");
+            st.setInt(1, id);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            DB.closeStatement(st);
+        }
     }
-   
+
 }
