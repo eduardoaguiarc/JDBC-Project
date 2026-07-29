@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import db.DB;
@@ -19,6 +20,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         this.conn = conn;
     }
 
+    @Override
     public Department findById(Integer id) {
         PreparedStatement st = null;
         ResultSet rs = null;
@@ -44,6 +46,32 @@ public class DepartmentDaoJDBC implements DepartmentDao {
     }
 
     @Override
+    public List<Department> findAll() {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+
+        try {
+          st = conn.prepareStatement("SELECT * FROM department ORDER BY name");
+          rs = st.executeQuery();
+          
+          List<Department> list = new ArrayList<>();
+          while (rs.next()) {
+            Department dep = new Department();
+            dep.setId(rs.getInt("id"));
+            dep.setName(rs.getString("name"));
+            list.add(dep);
+          }
+          return list;
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
+
+    }
+
+    @Override
     public void insert(Department obj) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'insert'");
@@ -60,12 +88,5 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteById'");
     }
-
-    @Override
-    public List<Department> findAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
-    }
-
    
 }
